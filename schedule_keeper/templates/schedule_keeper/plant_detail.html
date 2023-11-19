@@ -1,10 +1,49 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <title>$Title$</title>
-</head>
-<body>
-$END$
-</body>
-</html>
+{% extends 'base.html' %}
+
+{% block content %}
+    <br>
+    <h3>Plant Details</h3>
+    <hr>
+    {% if plant.img %}
+        <img src="{{ plant.img.url }}">
+        <br>
+    {% endif %}
+    <span class="text-info">Name: </span> <span>{{ plant.name }}</span>
+    <br>
+    <span class="text-info">Category: </span><span>{{ plant.category }}</span>
+    <br>
+    <span class="text-info">Watering frequency: </span><span>Every {{ plant.watering_frequency }} days</span>
+    <br>
+    {% if user.is_authenticated %}
+        {% if not posts %}
+            <hr>
+            <h3>Be the first one to write a post about this plant!</h3>
+        {% else %}
+        {% endif %}
+        <br>
+        <hr>
+        <h3>Posts</h3>
+        <ul>
+            {% for post in posts %}
+                <li class="list-group-item">
+                    <span class="text-info"> {{ post.user.username }} </span>
+                    <br>
+                    {% if post.img %}
+                        <img src="{{ post.img.url }}" alt="{{ plant.name }} photo">
+                    {% endif %}
+                    <br>
+                    <span>{{ post.content }}</span>
+                    <br>
+                    <span class="text-info">Created at: </span><span>{{ post.created_at }}</span>
+                    <br>
+                </li>
+                {% if user.is_staff or post.user.id == user.id %}
+                    <a href="{% url 'post-edit' plant.pk post.pk %}">Edit post</a>
+                {% endif %}
+            {% endfor %}
+        </ul>
+    {% endif %}
+    {% if user.is_authenticated %}
+        <a class="btn btn-primary" href="{% url 'post-create' plant.pk %}">Add Post</a>
+    {% endif %}
+{% endblock %}

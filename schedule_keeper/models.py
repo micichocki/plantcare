@@ -1,6 +1,5 @@
-# models.py
-
 from django.db import models
+from django.contrib.auth.models import User
 
 
 class Category(models.Model):
@@ -15,6 +14,7 @@ class Plant(models.Model):
     description = models.TextField(blank=True, null=True)
     category = models.ForeignKey(Category, on_delete=models.CASCADE)
     watering_frequency = models.PositiveIntegerField(help_text="Watering frequency in days")
+    img = models.ImageField(upload_to="uploads/% Y/% m/% d/", null=True)
 
     def __str__(self):
         return self.name
@@ -27,3 +27,25 @@ class WateringSchedule(models.Model):
 
     def __str__(self):
         return f"{self.plant.name} - Last Watered: {self.last_watered}, Next Watering: {self.next_watering_date}"
+
+
+class Post(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    plant = models.ForeignKey(Plant, on_delete=models.CASCADE)
+    content = models.TextField()
+    img = models.ImageField(upload_to="uploads/% Y/% m/% d/", null=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"{self.user.username} - {self.plant.name} - {self.created_at}"
+
+
+class Follow(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    plant = models.ForeignKey(Plant, on_delete=models.CASCADE)
+
+    def __str__(self):
+        return f"{self.user.username} follows {self.plant.name}"
+
+    def is_following(self, user, plant):
+        return Follow.objects.filter(user=user, plant=plant).exists()

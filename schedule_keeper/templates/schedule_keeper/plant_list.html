@@ -1,0 +1,22 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <ul class="list-group">
+        {% for item in plant_list %}
+            <li class="list-group-item">
+                <span class="text-info">Name: </span> <span>{{ item.plant.name }}</span>
+                <br>
+                <span class="text-info">Description: </span><span>{{ item.plant.description }}</span>
+                <br>
+                <span class="text-info">Water every </span><span>{{ item.plant.watering_frequency }}</span><span
+                    class="text-info"> days</span>
+                <br>
+                {% if item.is_following %}
+                    {#TODO#}
+                {% endif %}
+                <a class="btn btn-primary btn-sm active" role="button" aria-pressed="true"
+                   href="/plants/{{ item.plant.id }}/">Click to show details</a></li>
+            </li>
+        {% endfor %}
+    </ul>
+{% endblock %}
