@@ -8,15 +8,20 @@
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
           integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-    <link rel="stylesheet" href={% static 'main.css' %}>
-    <link rel="stylesheet"
-          href="https://fonts.googleapis.com/css?family=Libre+Baskerville|Source+Sans+Pro&display=swap">
-    <title>{% block title %} Plantcare {% endblock %}</title>
 
+    <link rel="stylesheet" href={% static 'css/base.css' %}>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Jomhuria&family=Libre+Baskerville:wght@400;700&family=Raleway:wght@800&display=swap"
+          rel="stylesheet">
+    <title>{% block title %} Plantcare {% endblock %}</title>
+    {% block extra-head %}{% endblock %}
 </head>
 <body>
 <nav class="navbar navbar-expand-sm navbar-dark bg-dark sticky-top">
-    <a class="navbar-brand" href="/">{% block brand %}<img src="{% static 'logo.png' %}" alt="logo">{% endblock %}</a>
+    <a class="navbar-brand" href="/">
+        <img class="mt-1" src={% static 'logo.jpg' %} alt="Potted Plant Logo">
+    </a>
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
             aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
@@ -24,12 +29,23 @@
 
     <div class="collapse navbar-collapse" id="navbarSupportedContent">
         <ul class="navbar-nav mr-auto">
-            <li class="nav-item active">
-                <a class="nav-link" href="/plants/">Home <span class="sr-only">(current)</span></a>
+            <li class="nav-item mt-1 active">
+                <a class="nav-link" href="/plants/">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="60" height="60" viewBox="0 0 78 71" fill="white">
+                        <g clip-path="url(#clip0_81_1206)">
+                            <path d="M32.5 59.1667V41.4167H45.5V59.1667H61.75V35.5H71.5L39 8.875L6.5 35.5H16.25V59.1667H32.5Z"
+                                  fill="white"/>
+                        </g>
+                        <defs>
+                            <clipPath id="clip0_81_1206">
+                                <rect width="78" height="71" fill="white"/>
+                            </clipPath>
+                        </defs>
+                    </svg>
             </li>
             {% if user.is_authenticated %}
                 <li class="nav-item">
-                    <a class="nav-link" href="/accounts/logout">Logout</a>
+                    <a class="nav-link mt-2" href="/accounts/logout">Logout</a>
                 </li>
             {% else %}
                 <li class="nav-item">
@@ -37,11 +53,11 @@
                 </li>
             {% endif %}
         </ul>
-        {#        <form action="{% url 'plant_search' %}" class="form-inline my-2 my-lg-0">#}
-        {#            <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search" name="search"#}
-        {#                   value="{{ search_text }}" minlength="3">#}
-        {#            <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>#}
-        {#        </form>#}
+        <form action="{% url 'plants' %}" class="form-inline my-2 my-lg-0">
+            <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search" name="search"
+                   value="{{ search_text }}">
+            <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
+        </form>
         {% if user.is_authenticated %}
             <a class="nav-link" href="/accounts/profile">User: {{ user.username }}</a>
         {% endif %}
@@ -53,12 +69,14 @@
     {% endblock %}
 </div>
 
-<!-- Copyright -->
+
 <footer class="page-footer font-small blue">
     <div class="footer-copyright text-center py-3">© 2023 Copyright:
         <a href="https://www.linkedin.com/in/michał-cichocki/"> Michał Cichocki</a>
         <p>Website by: Michał Cichocki</p>
         <p>Contact information: <a href="mailto:cichockimichal849@gmail.com">cichockimichal849@gmail.com</a></p>
+        <p>Illustrations designed by: <a href="https://storyset.com/illustration/people-taking-care-of-plants/amico">Storyset</a>
+        </p>
     </div>
 </footer>
 </body>

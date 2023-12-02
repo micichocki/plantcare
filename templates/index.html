@@ -1,0 +1,26 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block extra-head %}
+    <link rel="stylesheet" href="{% static 'css/index.css' %}">
+{% endblock %}
+
+{% block content %}
+    <main>
+        <div class='object-container'>
+            <img src={% static 'People-taking-care-of-plants.png' %} class="main-image"
+                 alt="People taking care of their plants">
+        </div>
+        <div class="welcome-text-container">
+            <h1 class="welcome-text">
+                Welcome to our plant management app! 🌿
+            </h1>
+            <h4 class="sub-text">
+                Explore everything you need to care for your plants. Add new
+                ones, track their progress, set watering reminders, and stay informed about their needs.
+                <br>
+                <br>With our app, your plants will thrive. Start now and create your green oasis! 🌱 #ManageGreenery
+            </h4>
+            <button class="btn btn-lg btn-success get-started-button" type="submit">Search</button>
+        </div>
+    </main>
+{% endblock %}

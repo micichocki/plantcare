@@ -6,26 +6,29 @@ from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth.decorators import user_passes_test, login_required
 from django.core.files.images import ImageFile
 from django.core.exceptions import PermissionDenied
+from django.db.models import Q
 
 from .models import Post, Plant, Follow
 from .forms import PostForm
 
 
 def index(request):
-    return render(request, 'base.html')
+    return render(request, 'index.html')
 
 
 def plants(request):
-    plants = Plant.objects.all()
-    user = request.user
-    plant_list = []
-    for plant in plants:
-        watering_schedule = plant.wateringschedule_set
-        posts = plant.post_set
-        is_following = Follow().is_following(user, plant)
-        plant_list.append(
-            {'plant': plant, 'watering_schedule': watering_schedule, 'posts': posts, 'is_following': is_following})
-    context = {'plant_list': plant_list}
+    search = request.GET.get('search', None)
+    if search:
+        found_plants_queryset = Plant.objects.filter(
+            Q(name__icontains=search) | Q(category__name__icontains=search))
+        plant_list = list(found_plants_queryset)
+        context = {'plant_list': plant_list, 'search': search}
+    else:
+        plant_list = Plant.objects.all()
+        context = {'plant_list': plant_list}
+    user =
+    for plant in plant_list:
+
     return render(request, 'schedule_keeper/plant_list.html', context)
 
 

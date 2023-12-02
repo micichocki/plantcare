@@ -1,22 +1,40 @@
 {% extends 'base.html' %}
-
+{% load static %}
+{% block extra-head %}
+    <link rel="stylesheet" href={% static 'css/plant_list.css' %}>
+    <link rel="stylesheet"
+          href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0"/>
+{% endblock %}
 {% block content %}
-    <ul class="list-group">
-        {% for item in plant_list %}
-            <li class="list-group-item">
-                <span class="text-info">Name: </span> <span>{{ item.plant.name }}</span>
-                <br>
-                <span class="text-info">Description: </span><span>{{ item.plant.description }}</span>
-                <br>
-                <span class="text-info">Water every </span><span>{{ item.plant.watering_frequency }}</span><span
-                    class="text-info"> days</span>
-                <br>
-                {% if item.is_following %}
-                    {#TODO#}
-                {% endif %}
-                <a class="btn btn-primary btn-sm active" role="button" aria-pressed="true"
-                   href="/plants/{{ item.plant.id }}/">Click to show details</a></li>
-            </li>
-        {% endfor %}
-    </ul>
+    {% if plant_list %}
+        <ul class="list-group">
+            {% for plant in plant_list %}
+                <li class="list-group-item">
+                    <span class="text-info">Name: </span> <span>{{ plant.name }}</span>
+                    <br>
+                    <span class="text-info">Category: </span> <span>{{ plant.category }}</span>
+                    <br>
+                    <span class="text-info">Description: </span><span>{{ plant.description }}</span>
+                    <br>
+                    <span class="text-info">Water every </span><span>{{ plant.watering_frequency }}</span><span
+                        class="text-info"> days</span>
+                    <br>
+                    {% if plant.is_following %}
+                        {#TODO#}
+                    {% endif %}
+                    <button class="follow-button">
+                        <span class="material-symbols-outlined">
+                            favorite
+                        </span>
+                    </button>
+                    <a class="btn btn-primary btn-sm active" role="button" aria-pressed="true"
+                       href="/plants/{{ item.plant.id }}/">Click to show details</a></li>
+                </li>
+                </ul>
+            {% endfor %}
+    {% else %}
+        <div class="alert alert-warning mt-2" role="alert">
+            No plants found for "{{ search }}".
+        </div>
+    {% endif %}
 {% endblock %}
