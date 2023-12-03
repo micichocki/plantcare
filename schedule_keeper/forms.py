@@ -1,4 +1,4 @@
-from .models import Plant, Post, Category
+from .models import Plant, Post, Category, Follow
 from django import forms
 
 from crispy_forms.helper import FormHelper
@@ -32,3 +32,9 @@ class PostForm(InstanceForm):
     class Meta:
         model = Post
         fields = ["content", "img"]
+
+
+class FollowForm(InstanceForm):
+    class Meta:
+        plant_id = forms.IntegerField()
+        is_following = forms.BooleanField()

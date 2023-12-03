@@ -8,6 +8,7 @@ from django.core.files.images import ImageFile
 from django.core.exceptions import PermissionDenied
 from django.db.models import Q
 from django.views.generic import TemplateView
+from django.views.decorators.http import require_POST
 
 from .models import Post, Plant, Follow
 from .forms import PostForm
