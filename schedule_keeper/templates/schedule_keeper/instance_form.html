@@ -16,7 +16,7 @@
     {% endif %}
     </h2>
     {% if related_instance and related_model_type %}
-        <p>For {{ related_model_type }} <em>{{ related_instance }}</em></p>
+        <p>For {{ related_model_type }} <span class="text-primary">{{ related_instance }}</span></p>
     {% endif %}
     {% crispy form %}
 {% endblock %}

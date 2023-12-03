@@ -17,15 +17,18 @@ class InstanceForm(forms.ModelForm):
 
 
 class CategoryForm(InstanceForm):
-    model = Category
-    fields = "__all__"
+    class Meta:
+        model = Category
+        fields = "__all__"
 
 
 class PlantForm(InstanceForm):
-    model = Plant
-    fields = "__all__"
+    class Meta:
+        model = Plant
+        fields = "__all__"
 
 
 class PostForm(InstanceForm):
-    model = Post
-    fields = ["plant", "content", "image"]
+    class Meta:
+        model = Post
+        fields = ["content", "img"]

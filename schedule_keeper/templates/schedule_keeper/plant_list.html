@@ -1,9 +1,12 @@
 {% extends 'base.html' %}
 {% load static %}
 {% block extra-head %}
-    <link rel="stylesheet" href={% static 'css/plant_list.css' %}>
+    <link rel="stylesheet" href={% static 'css/../../static/schedule_keeper/plant_list.css' %}>
     <link rel="stylesheet"
           href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0"/>
+
+    <link rel="stylesheet"
+          href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200"/>
 {% endblock %}
 {% block content %}
     {% if plant_list %}
@@ -19,16 +22,24 @@
                     <span class="text-info">Water every </span><span>{{ plant.watering_frequency }}</span><span
                         class="text-info"> days</span>
                     <br>
-                    {% if plant.is_following %}
-                        {#TODO#}
-                    {% endif %}
-                    <button class="follow-button">
+                    {% if not plant.is_following %}
+                        <button class="btn btn-success follow-button ">
                         <span class="material-symbols-outlined">
                             favorite
                         </span>
-                    </button>
+                        </button>
+                    {% else %}
+                        <button type="button" class="btn btn-danger follow-button">
+                                <span class="material-symbols-outlined">
+{#                                    TODO: FOLLOW FORM AND VIEW#}
+                        heart_broken
+                        </span>
+                        </button>
+
+                    {% endif %}
+
                     <a class="btn btn-primary btn-sm active" role="button" aria-pressed="true"
-                       href="/plants/{{ item.plant.id }}/">Click to show details</a></li>
+                       href="/plants/{{ plant.id }}/">Click to show details</a></li>
                 </li>
                 </ul>
             {% endfor %}

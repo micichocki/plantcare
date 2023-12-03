@@ -1,5 +1,7 @@
+import os
 from django.db import models
 from django.contrib.auth.models import User
+from django.utils import timezone
 
 
 class Category(models.Model):
@@ -29,11 +31,17 @@ class WateringSchedule(models.Model):
         return f"{self.plant.name} - Last Watered: {self.last_watered}, Next Watering: {self.next_watering_date}"
 
 
+def upload_to(instance, filename):
+    now = timezone.now()
+    upload_path = os.path.join('static', 'uploads', str(now.year), str(now.month), str(now.day))
+    return os.path.join(upload_path, filename)
+
+
 class Post(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     plant = models.ForeignKey(Plant, on_delete=models.CASCADE)
     content = models.TextField()
-    img = models.ImageField(upload_to="uploads/% Y/% m/% d/", null=True)
+    img = models.ImageField(upload_to=upload_to, null=True)
     created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
