@@ -1,0 +1,12 @@
+<form method="post" action="{% url 'follow_plant' plant.id %}">
+    {% csrf_token %}
+    {% if plant.is_following %}
+        <button class="btn btn-danger follow-button" type="submit">
+            <span class="material-symbols-outlined">heart_broken</span>
+        </button>
+    {% else %}
+        <button class="btn btn-success follow-button" type="submit">
+            <span class="material-symbols-outlined">favorite</span>
+        </button>
+    {% endif %}
+</form>

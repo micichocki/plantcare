@@ -123,3 +123,13 @@ class PostView(TemplateView):
 
     def check_permissions(self, user, post):
         return user.is_staff or post.user.id == user.id
+
+
+def follow_plant(request, plant_id):
+    plant = get_object_or_404(Plant, id=plant_id)
+    follow, created = Follow.objects.get_or_create(user=request.user, plant=plant)
+
+    if request.method == 'POST':
+        if not created:
+            follow.delete()
+    return redirect('plant_detail', plant_id=plant_id)

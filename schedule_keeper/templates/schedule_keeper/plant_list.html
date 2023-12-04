@@ -22,22 +22,7 @@
                     <span class="text-info">Water every </span><span>{{ plant.watering_frequency }}</span><span
                         class="text-info"> days</span>
                     <br>
-                    {% if not plant.is_following %}
-                        <button class="btn btn-success follow-button ">
-                        <span class="material-symbols-outlined">
-                            favorite
-                        </span>
-                        </button>
-                    {% else %}
-                        <button type="button" class="btn btn-danger follow-button">
-                                <span class="material-symbols-outlined">
-{#                                    TODO: FOLLOW FORM AND VIEW#}
-                        heart_broken
-                        </span>
-                        </button>
-
-                    {% endif %}
-
+                    {% extends 'schedule_keeper/follow_plant_form.html' %}
                     <a class="btn btn-primary btn-sm active" role="button" aria-pressed="true"
                        href="/plants/{{ plant.id }}/">Click to show details</a></li>
                 </li>
