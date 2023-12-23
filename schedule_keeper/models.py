@@ -16,7 +16,8 @@ class Plant(models.Model):
     description = models.TextField(blank=True, null=True)
     category = models.ForeignKey(Category, on_delete=models.CASCADE)
     watering_frequency = models.PositiveIntegerField(help_text="Watering frequency in days")
-    img = models.ImageField(upload_to="uploads/% Y/% m/% d/", null=True)
+    img = models.ImageField(upload_to="uploads/% Y/% m/% d/", null=True, blank=True)
+    creator = models.ForeignKey(User, on_delete=models.CASCADE)
 
     def __str__(self):
         return self.name
@@ -38,14 +39,11 @@ def upload_to(instance, filename):
 
 
 class Post(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
-    plant = models.ForeignKey(Plant, on_delete=models.CASCADE)
+    creator = models.ForeignKey(User, on_delete=models.CASCADE, default=None, null=True)
+    plant = models.ForeignKey(Plant, on_delete=models.CASCADE, related_name='posts')
     content = models.TextField()
-    img = models.ImageField(upload_to=upload_to, null=True)
+    img = models.ImageField(upload_to=upload_to, null=True, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
-
-    def __str__(self):
-        return f"{self.user.username} - {self.plant.name} - {self.created_at}"
 
 
 class Follow(models.Model):

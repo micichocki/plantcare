@@ -8,16 +8,16 @@ from django.core.files.images import ImageFile
 from django.core.exceptions import PermissionDenied
 from django.db.models import Q
 from django.views.generic import TemplateView
-from django.views.decorators.http import require_POST
 
 from .models import Post, Plant, Follow
-from .forms import PostForm
+from .forms import PlantForm, PostForm
 
 
 def index(request):
     return render(request, 'index.html')
 
 
+@login_required
 def plants(request):
     search = request.GET.get('search', None)
     if search:
@@ -34,6 +34,7 @@ def plants(request):
     return render(request, 'schedule_keeper/plant_list.html', context)
 
 
+@login_required
 def plant_detail(request, pk):
     plant = get_object_or_404(Plant, pk=pk)
     posts = plant.post_set.all()
@@ -56,7 +57,38 @@ def plant_detail(request, pk):
         viewed_plants.insert(0, viewed_plant)
         viewed_plants = viewed_plants[0:max_viewed_plants_length]
         request.session['viewed_plants'] = viewed_plants
+
+    follow_exists = Follow.objects.filter(user=request.user, plant=plant).exists()
+    context["is_following"] = follow_exists
+
     return render(request, "schedule_keeper/plant_detail.html", context)
+
+
+class PlantView(TemplateView):
+    template_name = 'schedule_keeper/instance_form.html'
+    form_class = PlantForm
+
+    def get(self, request, pk):
+        plant = get_object_or_404(Plant, pk=pk)
+        related_posts = plant.posts.all()
+        context = {"plant": plant, "posts": related_posts}
+        return render(request, "schedule_keeper/plant_detail.html", context)
+
+    def post(self, request, pk):
+        plant = get_object_or_404(Plant, pk=pk)
+        form = self.form_class(request.POST, request.FILES, instance=plant)
+
+        if form.is_valid():
+            form.save()
+            return redirect("plant-detail", plant.pk)
+
+        context = {
+            "form": form,
+            "instance": plant,
+            "model_type": "Plant",
+        }
+
+        return render(request, self.template_name, context)
 
 
 class PostView(TemplateView):
@@ -93,6 +125,9 @@ class PostView(TemplateView):
         if form.is_valid():
             updated_post = form.save(commit=False)
 
+            updated_post.plant = plant
+            updated_post.creator = request.user
+
             post_img = form.cleaned_data['img']
             if post_img:
                 image = Image.open(post_img)
@@ -101,6 +136,8 @@ class PostView(TemplateView):
                 image.save(fp=image_data, format=image.format)
                 image_file = ImageFile(image_data)
                 updated_post.img.save(post_img.name, image_file)
+                plant.img = updated_post.img.url
+                plant.save()
 
             if post is None:
                 messages.success(request, f"Post for \"{updated_post}\" created.")
@@ -132,4 +169,5 @@ def follow_plant(request, plant_id):
     if request.method == 'POST':
         if not created:
             follow.delete()
-    return redirect('plant_detail', plant_id=plant_id)
+    referer = request.META.get('HTTP_REFERER', None)
+    return redirect(referer or 'home')

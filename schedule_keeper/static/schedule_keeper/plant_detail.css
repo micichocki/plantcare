@@ -1,0 +1,13 @@
+.follow-button {
+    width: 2.4rem;
+    height: 2.45rem;
+    text-align: center;
+    padding: 0.3rem 0.05rem 0 0;
+}
+
+form {
+    display: inline;
+}
+
+.list-group-item {
+}

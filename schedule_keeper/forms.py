@@ -25,7 +25,7 @@ class CategoryForm(InstanceForm):
 class PlantForm(InstanceForm):
     class Meta:
         model = Plant
-        fields = "__all__"
+        fields = ["name", "description", "category", "watering_frequency", "img"]
 
 
 class PostForm(InstanceForm):
