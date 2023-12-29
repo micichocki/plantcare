@@ -53,5 +53,6 @@ class Follow(models.Model):
     def __str__(self):
         return f"{self.user.username} follows {self.plant.name}"
 
-    def is_following(self, user, plant):
+    @staticmethod
+    def is_following(user, plant):
         return Follow.objects.filter(user=user, plant=plant).exists()

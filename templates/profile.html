@@ -5,16 +5,42 @@
 {% endblock %}
 {% block content %}
     <main>
-        {% for plant in plant_list %}
-            <div class="card" style="width: 18rem;">
-                <img class="card-img-top" src="{{ plant.img.url|safe }}" alt="Card image cap">
-                <div class="card-body">
-                    <h5 class="card-title">Card title</h5>
-                    <p class="card-text">Some quick example text to build on the card title and make up the bulk of the
-                        card's content.</p>
-                    <a href="#" class="btn btn-primary">Go somewhere</a>
+        <h2 class="mt-4">Followed Plants</h2>
+        <div class="followed-plants-container">
+            {% for plant in followed_plants %}
+                <div class="card">
+                    {% if plant.img %}
+                        <img class="card-img-top" src="{{ plant.img.url|safe }}" alt="Card image cap">
+                    {% else %}
+                        <img class="card-img-top" src="{% static 'default-placeholder.png' %}" alt="Card image cap">
+                    {% endif %}
+                    <div class="card-body">
+                        <h5 class="card-title">{{ plant.name }}</h5>
+                        <p class="card-text">{{ plant.description }}</p>
+                        <a class="btn btn-primary btn-sm active" role="button" aria-pressed="true"
+                           href="/plants/{{ plant.id }}/">Click to show details</a>
+                    </div>
                 </div>
-            </div>
-        {% endfor %}
+            {% endfor %}
+        </div>
+        <h2 class="mt-4">Recently Viewed Plants</h2>
+        <div class="followed-plants-container">
+            {% for plant in viewed_plants %}
+                <div class="card">
+                    {% if plant.img %}
+                        <img class="card-img-top" src="{{ plant.img.url|safe }}" alt="Card image cap">
+                    {% else %}
+                        <img class="card-img-top" src="{% static 'default-placeholder.png' %}" alt="Card image cap">
+                    {% endif %}
+                    <div class="card-body">
+                        <h5 class="card-title">{{ plant.name }}</h5>
+                        <p class="card-text">{{ plant.description }}</p>
+                        <a class="btn btn-primary btn-sm active" role="button" aria-pressed="true"
+                           href="/plants/{{ plant.id }}/">Click to show details</a>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+
     </main>
 {% endblock %}

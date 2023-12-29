@@ -12,34 +12,41 @@
     <br>
     <h3>Plant Details</h3>
     <hr>
-    {% if plant.img %}
-        <img src="{{ plant.img.url }}">
-        <br>
-    {% endif %}
-    <span class="text-info">Name: </span> <span>{{ plant.name }}</span>
-    <br>
-    <span class="text-info">Category: </span><span>{{ plant.category }}</span>
-    <br>
-    <span class="text-info">Watering frequency: </span><span>Every {{ plant.watering_frequency }} days</span>
-    <br>
+    <div class="card-container">
+        <div class="plant-info">
+            <div class="text-info">Name:</div>
+            <div class="mb-3">{{ plant.name }}</div>
+            <div class="text-info">Category:</div>
+            <div class="mb-3">{{ plant.category }}</div>
+            <div class="text-info">Watering frequency:</div>
+            <div class="mb-3">Every {{ plant.watering_frequency }} days</div>
 
-    {% if plant.creator == request.user or request.user.is_staff %}
-        {#        TODO#}
-        <a class="btn btn-primary btn-sm active" role="button" aria-pressed="true"
-           href="/plants/{{ plant.id }}/">Click to show details</a></li>
-    {% endif %}
-    <form method="post" action="{% url 'follow_plant' plant.id %}">
-        {% csrf_token %}
-        {% if is_following %}
-            <button class="btn btn-danger follow-button" type="submit">
-                <span class="material-symbols-outlined">heart_broken</span>
-            </button>
-        {% else %}
-            <button class="btn btn-success follow-button" type="submit">
-                <span class="material-symbols-outlined">favorite</span>
-            </button>
-        {% endif %}
-    </form>
+            {% if plant.creator == request.user or request.user.is_staff %}
+                {#        TODO#}
+                <a class="btn btn-primary btn-sm active" role="button" aria-pressed="true"
+                   href="/plants/{{ plant.id }}/">Click to show details</a></li>
+            {% endif %}
+            <form method="post" action="{% url 'follow-plant' plant.id %}">
+
+                {% csrf_token %}
+                {% if is_following %}
+                    <button class="btn btn-danger follows-button" type="submit">
+                        <span class="material-symbols-outlined">heart_broken</span>
+                    </button>
+                {% else %}
+                    <button class="btn btn-success follows-button" type="submit">
+                        <span class="material-symbols-outlined">favorite</span>
+                    </button>
+                {% endif %}
+            </form>
+        </div>
+        <div class="plant-img-container">
+            {% if plant.img %}
+                <img class="plant-img" src="{{ plant.img.url }}">
+            {% endif %}
+        </div>
+    </div>
+
 
     {% if user.is_authenticated %}
         {% if not posts %}
@@ -52,14 +59,21 @@
             <ul>
                 {% for post in posts %}
                     <li class="list-group-item">
-                        <span class="text-info"> {{ post.creator }} </span>
-                        {% if post.img %}
-                            <img src="{{ post.img.url }}" alt="{{ plant.name }} photo">
-                        {% endif %}
-                        <br>
-                        <span>{{ post.content }}</span>
-                        <br>
-                        <span class="text-info">Created at: </span><span>{{ post.created_at }}</span>
+                        <div class="card-container">
+                            <div class="post-info">
+                                <span class="text-info"> {{ post.creator }} </span>
+                                <br>
+                                <span>{{ post.content }}</span>
+                                <br>
+                                <span class="text-info">Created at: </span><span>{{ post.created_at }}</span>
+                            </div>
+                            <div class="post-img-container">
+                                {% if post.img %}
+                                    <img class="post-img" src="{{ post.img.url }}" alt="{{ plant.name }} photo">
+                                {% endif %}
+                            </div>
+                        </div>
+
 
                     </li>
                     {% if user.is_staff or post.creator.id == user.id %}

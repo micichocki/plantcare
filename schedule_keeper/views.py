@@ -8,6 +8,7 @@ from django.core.files.images import ImageFile
 from django.core.exceptions import PermissionDenied
 from django.db.models import Q
 from django.views.generic import TemplateView
+from django.views.generic import DetailView
 
 from .models import Post, Plant, Follow
 from .forms import PlantForm, PostForm
@@ -30,14 +31,15 @@ def plants(request):
         context = {'plant_list': plant_list}
     user = request.user
     for plant in plant_list:
-        plant.is_following = Follow.objects.filter(user=user, plant=plant).exists()
+        plant.is_following = Follow.is_following(user, plant)
     return render(request, 'schedule_keeper/plant_list.html', context)
 
 
 @login_required
 def plant_detail(request, pk):
     plant = get_object_or_404(Plant, pk=pk)
-    posts = plant.post_set.all()
+    posts = plant.posts.all()
+
     if posts:
         context = {
             "plant": plant,
@@ -58,8 +60,8 @@ def plant_detail(request, pk):
         viewed_plants = viewed_plants[0:max_viewed_plants_length]
         request.session['viewed_plants'] = viewed_plants
 
-    follow_exists = Follow.objects.filter(user=request.user, plant=plant).exists()
-    context["is_following"] = follow_exists
+    is_following = Follow.is_following(request.user, plant)
+    context["is_following"] = is_following
 
     return render(request, "schedule_keeper/plant_detail.html", context)
 
@@ -68,27 +70,29 @@ class PlantView(TemplateView):
     template_name = 'schedule_keeper/instance_form.html'
     form_class = PlantForm
 
-    def get(self, request, pk):
-        plant = get_object_or_404(Plant, pk=pk)
-        related_posts = plant.posts.all()
-        context = {"plant": plant, "posts": related_posts}
-        return render(request, "schedule_keeper/plant_detail.html", context)
-
-    def post(self, request, pk):
-        plant = get_object_or_404(Plant, pk=pk)
-        form = self.form_class(request.POST, request.FILES, instance=plant)
-
-        if form.is_valid():
-            form.save()
-            return redirect("plant-detail", plant.pk)
-
+    def get(self, request):
+        form = self.form_class(instance=None)
         context = {
             "form": form,
-            "instance": plant,
+            "instance": None,
             "model_type": "Plant",
         }
-
         return render(request, self.template_name, context)
+
+    def post(self, request):
+        form = self.form_class(request.POST, instance=None)
+        if form.is_valid():
+            new_plant = form.save(commit=False)
+            new_plant.creator = request.user
+            new_plant.save()
+            return redirect("plant-detail", pk=new_plant.pk)
+        else:
+            context = {
+                "form": form,
+                "instance": None,
+                "model_type": "Plant",
+            }
+            return render(request, self.template_name, context)
 
 
 class PostView(TemplateView):
@@ -153,7 +157,8 @@ class PostView(TemplateView):
             "instance": post,
             "model_type": "Post",
             "related_instance": plant,
-            "related_model_type": "Plant"
+            "related_model_type": "Plant",
+            "is_following": Follow.is_following(request.user, plant),
         }
 
         return render(request, self.template_name, context)

@@ -1,13 +1,31 @@
-.follow-button {
-    width: 2.4rem;
-    height: 2.45rem;
+.follows-button {
+    width: 2.2rem;
+    height: 1.90rem;
     text-align: center;
-    padding: 0.3rem 0.05rem 0 0;
+    padding: 0.14rem 0.05rem 0 0;
+    margin-top: 0.01rem;
 }
 
 form {
     display: inline;
 }
 
-.list-group-item {
+
+.card-container {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
 }
+
+.plant-img {
+    width: 10rem;
+    height: 10rem;
+
+}
+
+.post-img {
+    width: 6rem;
+    height: 6rem;
+}
+

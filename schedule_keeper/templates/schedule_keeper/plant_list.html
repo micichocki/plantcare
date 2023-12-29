@@ -13,29 +13,38 @@
         <ul class="list-group">
             {% for plant in plant_list %}
                 <li class="list-group-item">
-                    <span class="text-info">Name: </span> <span>{{ plant.name }}</span>
-                    <br>
-                    <span class="text-info">Category: </span> <span>{{ plant.category }}</span>
-                    <br>
-                    <span class="text-info">Description: </span><span>{{ plant.description }}</span>
-                    <br>
-                    <span class="text-info">Water every </span><span>{{ plant.watering_frequency }}</span><span
-                        class="text-info"> days</span>
-                    <br>
-                    <form method="post" action="{% url 'follow_plant' plant.id %}">
-                        {% csrf_token %}
-                        {% if plant.is_following %}
-                            <button class="btn btn-danger follow-button" type="submit">
-                                <span class="material-symbols-outlined">heart_broken</span>
-                            </button>
-                        {% else %}
-                            <button class="btn btn-success follow-button" type="submit">
-                                <span class="material-symbols-outlined">favorite</span>
-                            </button>
+                    <div class="plant-card">
+                        <div class="plant-info">
+                            <span class="text-info">Name: </span> <span>{{ plant.name }}</span>
+                            <br>
+                            <span class="text-info">Category: </span> <span>{{ plant.category }}</span>
+                            <br>
+                            <span class="text-info">Description: </span><span>{{ plant.description }}</span>
+                            <br>
+                            <span class="text-info">Water every </span><span>{{ plant.watering_frequency }}</span><span
+                                class="text-info"> days</span>
+                            <br>
+                            <form method="post" action="{% url 'follow-plant' plant.id %}">
+                                {% csrf_token %}
+                                {% if plant.is_following %}
+                                    <button class="btn btn-danger follow-button-style" type="submit">
+                                        <span class="material-symbols-outlined">heart_broken</span>
+                                    </button>
+                                {% else %}
+                                    <button class="btn btn-success follow-button-style" type="submit">
+                                        <span class="material-symbols-outlined">favorite</span>
+                                    </button>
+                                {% endif %}
+                            </form>
+                            <a class="btn btn-primary btn-sm active" role="button" aria-pressed="true"
+                               href="/plants/{{ plant.id }}/">Click to show details</a>
+                        </div>
+                        {% if plant.img %}
+                            <div class="plant-image-container">
+                                <img class="plant-img" src={{ plant.img.url }} alt="plant_image">
+                            </div>
                         {% endif %}
-                    </form>
-                    <a class="btn btn-primary btn-sm active" role="button" aria-pressed="true"
-                       href="/plants/{{ plant.id }}/">Click to show details</a></li>
+                    </div>
                 </li>
                 </ul>
             {% endfor %}
@@ -44,4 +53,11 @@
             No plants found for "{{ search }}".
         </div>
     {% endif %}
+
+    <div class="add-plant-section">
+        <a class="btn btn-primary btn-lg active" role="button" aria-pressed="true"
+           href="{% url 'plant-create' %} ">Add new Plant</a>
+    </div>
+
+
 {% endblock %}
