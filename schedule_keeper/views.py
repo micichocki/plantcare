@@ -66,6 +66,48 @@ def plant_detail(request, pk):
     return render(request, "schedule_keeper/plant_detail.html", context)
 
 
+class PlantEditView(TemplateView):
+    template_name = 'schedule_keeper/instance_form.html'
+    form_class = PlantForm
+
+    def get(self, request, pk):
+        plant = get_object_or_404(Plant, pk=pk)
+        form = self.form_class(instance=plant)
+        context = {
+            "form": form,
+            "instance": plant,
+            "model_type": "Plant",
+        }
+        return render(request, self.template_name, context)
+
+    def post(self, request, pk):
+        plant = get_object_or_404(Plant, pk=pk)
+        form = self.form_class(request.POST, request.FILES, instance=plant)
+        if form.is_valid():
+            edited_plant = form.save(commit=False)
+            plant_img = form.cleaned_data['img']
+
+            if plant_img:
+                image = Image.open(plant_img)
+                image.thumbnail((300, 300))
+                image_data = BytesIO()
+                image.save(fp=image_data, format=image.format)
+                image_file = ImageFile(image_data)
+                edited_plant.img.save(plant_img.name, image_file)
+                plant.img = edited_plant.img.url
+                plant.save()
+
+            edited_plant.save()
+            return redirect("plant-detail", pk=edited_plant.pk)
+        else:
+            context = {
+                "form": form,
+                "instance": plant,
+                "model_type": "Plant",
+            }
+            return render(request, self.template_name, context)
+
+
 class PlantView(TemplateView):
     template_name = 'schedule_keeper/instance_form.html'
     form_class = PlantForm
@@ -140,8 +182,8 @@ class PostView(TemplateView):
                 image.save(fp=image_data, format=image.format)
                 image_file = ImageFile(image_data)
                 updated_post.img.save(post_img.name, image_file)
-                plant.img = updated_post.img.url
-                plant.save()
+                post.img = updated_post.img.url
+                post.save()
 
             if post is None:
                 messages.success(request, f"Post for \"{updated_post}\" created.")

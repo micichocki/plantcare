@@ -16,12 +16,17 @@ form {
     flex-direction: row;
     justify-content: space-between;
     align-items: center;
+    gap: 2rem;
 }
 
 .plant-img {
     width: 10rem;
     height: 10rem;
+    margin-right: 1rem;
+}
 
+.description {
+    width: 40rem;
 }
 
 .post-img {

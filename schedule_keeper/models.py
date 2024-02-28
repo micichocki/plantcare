@@ -11,12 +11,18 @@ class Category(models.Model):
         return self.name
 
 
+def upload_to(instance, filename):
+    now = timezone.now()
+    upload_path = os.path.join('static', 'uploads', str(now.year), str(now.month), str(now.day))
+    return os.path.join(upload_path, filename)
+
+
 class Plant(models.Model):
     name = models.CharField(max_length=255)
     description = models.TextField(blank=True, null=True)
     category = models.ForeignKey(Category, on_delete=models.CASCADE)
     watering_frequency = models.PositiveIntegerField(help_text="Watering frequency in days")
-    img = models.ImageField(upload_to="uploads/% Y/% m/% d/", null=True, blank=True)
+    img = models.ImageField(upload_to=upload_to, null=True, blank=True)
     creator = models.ForeignKey(User, on_delete=models.CASCADE)
 
     def __str__(self):
@@ -30,12 +36,6 @@ class WateringSchedule(models.Model):
 
     def __str__(self):
         return f"{self.plant.name} - Last Watered: {self.last_watered}, Next Watering: {self.next_watering_date}"
-
-
-def upload_to(instance, filename):
-    now = timezone.now()
-    upload_path = os.path.join('static', 'uploads', str(now.year), str(now.month), str(now.day))
-    return os.path.join(upload_path, filename)
 
 
 class Post(models.Model):

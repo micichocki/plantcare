@@ -9,6 +9,12 @@
           href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200"/>
 {% endblock %}
 {% block content %}
+
+    <div class="add-plant-section">
+        <a class="btn btn-primary btn-lg active" role="button" aria-pressed="true"
+           href="{% url 'plant-create' %} ">Add new Plant +</a>
+    </div>
+
     {% if plant_list %}
         <ul class="list-group">
             {% for plant in plant_list %}
@@ -18,8 +24,6 @@
                             <span class="text-info">Name: </span> <span>{{ plant.name }}</span>
                             <br>
                             <span class="text-info">Category: </span> <span>{{ plant.category }}</span>
-                            <br>
-                            <span class="text-info">Description: </span><span>{{ plant.description }}</span>
                             <br>
                             <span class="text-info">Water every </span><span>{{ plant.watering_frequency }}</span><span
                                 class="text-info"> days</span>
@@ -53,11 +57,4 @@
             No plants found for "{{ search }}".
         </div>
     {% endif %}
-
-    <div class="add-plant-section">
-        <a class="btn btn-primary btn-lg active" role="button" aria-pressed="true"
-           href="{% url 'plant-create' %} ">Add new Plant</a>
-    </div>
-
-
 {% endblock %}

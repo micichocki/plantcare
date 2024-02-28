@@ -11,6 +11,11 @@
     height: 30rem;
 }
 
+.card-text {
+    overflow-y: auto;
+    max-height: 2.7rem;
+}
+
 .card-img-top {
     width: 20rem;
     height: 20rem;

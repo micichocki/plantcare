@@ -20,11 +20,12 @@
             <div class="mb-3">{{ plant.category }}</div>
             <div class="text-info">Watering frequency:</div>
             <div class="mb-3">Every {{ plant.watering_frequency }} days</div>
+            <div class="text-info">Description:</div>
+            <div class="mb-3 description">Every {{ plant.description }} days</div>
 
             {% if plant.creator == request.user or request.user.is_staff %}
-                {#        TODO#}
                 <a class="btn btn-primary btn-sm active" role="button" aria-pressed="true"
-                   href="/plants/{{ plant.id }}/">Click to show details</a></li>
+                   href="/plants/{{ plant.id }}/edit">Edit plant details</a>
             {% endif %}
             <form method="post" action="{% url 'follow-plant' plant.id %}">
 

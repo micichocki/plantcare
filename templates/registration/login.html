@@ -1,6 +1,10 @@
 {% extends "base.html" %}
 {% load i18n static %}
+{% load static %}
+{% block extra-head %}
 
+    <link rel="stylesheet" href={% static 'css/login.css' %}>
+{% endblock %}
 
 {% block content %}
     {% if form.errors and not form.non_field_errors %}
@@ -30,23 +34,13 @@
         {% endif %}
 
         <form action="{% url 'accounts:login' %}" method="post" id="login-form">{% csrf_token %}
-            <div class="form-row">
                 {{ form.username.errors }}
                 {{ form.username.label_tag }} {{ form.username }}
-            </div>
-            <div class="form-row">
                 {{ form.password.errors }}
                 {{ form.password.label_tag }} {{ form.password }}
                 <input type="hidden" name="next" value="{{ next }}">
-            </div>
-            {% url 'accounts:password_reset' as password_reset_url %}
-            {% if password_reset_url %}
-                <div class="password-reset-link">
-                    <a href="{{ password_reset_url }}">{% translate 'Forgotten your password or username?' %}</a>
-                </div>
-            {% endif %}
             <div class="submit-row">
-                <input type="submit" value="{% translate 'Log in' %}">
+                <input class='btn btn-primary' type="submit" value="{% translate 'Log in' %}">
             </div>
         </form>
 
